@@ -6,55 +6,77 @@ var heroes = [
 
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser')
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 	extended: true
 }));
+
+app.use(function (req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	next();
+});
 app.get('/heroes', function (req, res) {
 	res.send(heroes);
 });
 
 app.get('/heroes/:id', function (req, res) {
-	var id = Number.parseInt(req.params.id);
+
+	var id = isNaN(Number.parseInt(req.params.id)) ? null : Number.parseInt(req.params.id);
+	if(id!==null){
 	var findHero = heroes.find((hero) => {
 		return hero.id === id;
-	});
-	res.send(findHero);
+	});}
+	else{
+		res.send("id is not a number, enter a valid id");
+	}
+	if(typeof findHero !== 'undefined') {
+		res.send(findHero);
+	}
+	else{res.send("cant find hero! enter an existing hero id");}
 });
 
 app.put('/heroes/:id', function (req, res) {
-	var id = Number.parseInt(req.params.id);
-
-	var findHero = heroes.find((hero) => {
-		return hero.id === id;
-	});
-	findHero.name = req.query.name;
-	res.send(findHero);
+	var id = isNaN(Number.parseInt(req.params.id)) ? null : Number.parseInt(req.params.id);
+	if (id !== null) {
+		var findHero = heroes.find((hero) => {
+			return hero.id === id;
+		});
+	}
+	else{
+		res.send("id is not a number, enter a valid id");
+	}
+	if(typeof findHero !== 'undefined') {
+		findHero.name = req.query.name;
+		res.send(findHero);
+	}
+	else{res.send("cant find hero! enter an existing hero id");}
 });
 
 app.post('/heroes', function (req, res) {
-	var id = Number.parseInt(req.body.id);
-	var name = req.body.name;
+	var newHero = req.body;
 	for (let i = 0; i < heroes.length; i++)
-		if (heroes[i] === id) {
-			res.send("id already in the database! please try again");
+		if (heroes[i].id === newHero.id) {
+			res.send('id already in the database! please try again');
 			return;
 		}
-	var newHero ={id: id ,name: name};
 	heroes.push(newHero);
 	res.send(newHero);
 });
 
 app.delete('/heroes/:id', function (req, res) {
-	var id = Number.parseInt(req.params.id);
-	var heroIndex;
+	var id = isNaN(Number.parseInt(req.params.id)) ? null : Number.parseInt(req.params.id);
+	var heroIndex=null;
 	for (let i = 0; i < heroes.length; i++) {
 		if (heroes[i].id === id)
 			heroIndex = i;
 	}
+	if(heroIndex!==null){
 	heroes.splice(heroIndex, 1);
 	res.send(heroes);
+	}
+	else {res.send("Hero Not in DB.. Cant delete!")}
 });
 
 app.delete('/heroes', function (req, res) {
