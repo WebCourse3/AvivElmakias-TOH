@@ -6,7 +6,6 @@ var heroes = require('./heroesRoute');//second router, hirarchy : SERVER --> Rou
 
 //configure other routes
 router.use('/heroes', heroes);
-
 //router routes
 router.use(function timeLog (req, res, next) {
 	console.log('Time: ', Date.now());

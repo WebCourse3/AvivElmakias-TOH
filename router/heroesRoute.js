@@ -1,13 +1,13 @@
 'use strict';
 var express = require('express');//init express
 var heroesRouter = express.Router();//creates new router using express
-var heroes = require('../DB/HeroesJSON');//getting the array
 var bodyParser = require('body-parser');//init body-parser
 heroesRouter.use(bodyParser.json());       // to support JSON-encoded bodies
 heroesRouter.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 	extended: true
 }));
-
+var heroHandler = require('../DB/heroOP');
+var heroOp = new heroHandler();
 heroesRouter.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -15,75 +15,59 @@ heroesRouter.use(function (req, res, next) {
 });
 
 heroesRouter.get('/', function (req, res) {
-	res.send(heroes);
+	res.send(heroOp.getHeroes());
 });
 
 heroesRouter.get('/:id', function (req, res) {
-
-	var id = isNaN(Number.parseInt(req.params.id)) ? null : Number.parseInt(req.params.id);
-	if(id!==null){
-		var findHero = heroes.find((hero) => {
-			return hero.id === id;
-		});}
-	else{
-		res.send("id is not a number, enter a valid id");
-	}
-	if(typeof findHero !== 'undefined') {
+	if (heroOp.heroExists(req.params.id)) {
+		var findHero = heroOp.getHeroById(req.params.id);
 		res.send(findHero);
 	}
-	else{res.send("cant find hero! enter an existing hero id");}
+	else {
+		res.send('Hero doesnt exist, please try again!');
+	}
 });
 
 heroesRouter.put('/:id', function (req, res) {
-	var id = isNaN(Number.parseInt(req.params.id)) ? null : Number.parseInt(req.params.id);
-	if (id !== null) {
-		var findHero = heroes.find((hero) => {
-			return hero.id === id;
-		});
+	if (heroOp.heroExists(req.params.id)) {
+		heroOp.updateHeroName(req.params.id, req.query.name);
+		res.send(heroOp.getHeroById(req.params.id));
 	}
-	else{
-		res.send("id is not a number, enter a valid id");
+	else {
+		res.send('id is not a number, enter a valid id');
 	}
-	if(typeof findHero !== 'undefined') {
-		findHero.name = req.query.name;
-		res.send(findHero);
-	}
-	else{res.send("cant find hero! enter an existing hero id");}
+
 });
 
 heroesRouter.post('/', function (req, res) {
-	var newHero = req.body;
-	for (let i = 0; i < heroes.length; i++)
-		if (heroes[i].id === newHero.id) {
-			res.send('id already in the database! please try again');
-			return;
-		}
-	heroes.push(newHero);
-	res.send(newHero);
+	if (heroOp.heroExists(req.body.id)) {
+		res.send('hero id already exists!');
+	}
+	else {
+		heroOp.addHero(req.body.id, req.body.name);
+		res.send(heroOp.getHeroes());
+	}
 });
 
 heroesRouter.delete('/:id', function (req, res) {
-	var id = isNaN(Number.parseInt(req.params.id)) ? null : Number.parseInt(req.params.id);
-	var heroIndex=null;
-	for (let i = 0; i < heroes.length; i++) {
-		if (heroes[i].id === id)
-			heroIndex = i;
+	if (heroOp.heroExists(req.params.id)) {
+		heroOp.deleteHeroById(req.params.id);
+		res.send(heroOp.getHeroes());
 	}
-	if(heroIndex!==null){
-		heroes.splice(heroIndex, 1);
-		res.send(heroes);
+	else {
+		res.send('Cant Delete a Non existing Hero!');
 	}
-	else {res.send("Hero Not in DB.. Cant delete!")}
 });
 
 heroesRouter.delete('/', function (req, res) {
-	var name = req.query.name;
-	var heroIndex;
-	for (let i = 0; i < heroes.length; i++) {
-		if (heroes[i].name === name)
-			heroIndex = i;
+	var len = heroOp.getHeroes().length;
+	heroOp.deleteHeroByName(req.query.name);
+	if (heroOp.getHeroes().length === len) {
+		res.send('Hero Name does not Exist!');
 	}
-	heroes.splice(heroIndex, 1);
-	res.send(heroes);
+	else {
+		res.send(heroOp.getHeroes());
+	}
+
 });
-module.exports=heroesRouter;
+module.exports = heroesRouter;
