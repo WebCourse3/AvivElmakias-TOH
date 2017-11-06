@@ -70,4 +70,9 @@ heroesRouter.delete('/', function (req, res) {
 	}
 
 });
-module.exports = heroesRouter;
+module.exports = {
+	router: heroesRouter,
+	setHeroHandler: (handler) => {
+		heroOp = handler;
+	}
+};

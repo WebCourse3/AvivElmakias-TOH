@@ -1,32 +1,35 @@
 'use strict';
 
 const Hero = require('../models/hero');
-var heroes = require('./HeroesJSON');
+const heroes = require('./Heroes');
 
 class herosHandler {
+	constructor() {
+		this.heroesArr = [];
+		heroes.heroesArray.forEach(hero=> this.heroesArr.push(new Hero(hero.id,hero.name)));
+	}
 
-
-	 getHeroes() {
-		return heroes;
+	getHeroes() {
+		return this.heroesArr;
 	}
 	   getHeroById(id) {
-		return heroes.find(hero => hero.id == id);
+		return this.getHeroes().find(hero => hero.id === id);
 	}
 
 	 heroExists(id) {
-		return heroes.filter(hero => hero.id == id).length === 1;
+		return this.getHeroes().filter(hero => hero.id === id).length === 1;
 	}
 
 	 addHero(heroId, heroName) {
-		heroes.push(new Hero(heroId, heroName));
+		 this.getHeroes().push(new Hero(heroId, heroName));
 	}
 
 	 deleteHeroById(id) {
-		heroes = heroes.filter(hero => hero.id !== id);
+		 this.heroesArr = this.getHeroes().filter(hero => hero.id !== id);
 	}
 
 	 deleteHeroByName(name) {
-		heroes = heroes.filter(hero => hero.name !== name);
+		 this.heroesArr = this.getHeroes().filter(hero => hero.name !== name);
 	}
 
 	 updateHeroName(id, newName) {

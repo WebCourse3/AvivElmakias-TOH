@@ -1,0 +1,16 @@
+{
+  "heroesArray": [
+    {
+      "id": "42",
+      "name": "DeadPool"
+    },
+    {
+      "id": "25",
+      "name": "SuperMan"
+    },
+    {
+      "id": "35",
+      "name": "Thor"
+    }
+  ]
+}
