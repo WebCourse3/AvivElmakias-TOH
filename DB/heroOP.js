@@ -8,7 +8,7 @@ class herosHandler {
 		this.heroesArr = [];
 		heroes.heroesArray.forEach(hero=> this.heroesArr.push(new Hero(hero.id,hero.name)));
 	}
-
+/**/
 	getHeroes() {
 		return this.heroesArr;
 	}
