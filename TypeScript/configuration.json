@@ -1,0 +1,9 @@
+{
+  "configuration" :
+  {
+    "console" : false,
+    "file" : true,
+    "colors" : false,
+    "logLevel" : true
+  }
+}
