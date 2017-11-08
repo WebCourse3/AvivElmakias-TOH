@@ -78,7 +78,7 @@ describe('Heroes-post-request', function () {
 			heroHandlerStub.getHeroes = sinon.stub();
 			heroHandlerStub.getHeroes.withArgs().returns('Hero Was Succesfully added');
 			server.setHeroHandler(heroHandlerStub);
-			chai.request(app)
+			chai.request(app)a
 				.post('/heroes')
 				.send({'id': '4', 'name': 'Tal'})
 				.end(function (err, res) {
@@ -88,6 +88,8 @@ describe('Heroes-post-request', function () {
 		});
 	});
 });
+
+/**/
 
 describe('functions', function () {
 	describe('gets', function () {

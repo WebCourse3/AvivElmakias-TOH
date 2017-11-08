@@ -17,6 +17,8 @@ router.get('/', function (req, res) {
 });
 
 module.exports = {
-	router:router,
-	setHeroHandler:heroes.setHeroHandler
-}; //exports to router.use in server.js
+	router: router,
+	setHeroHandler: heroes.setHeroHandler
+
+};
+	/**/

@@ -58,7 +58,7 @@ heroesRouter.delete('/:id', function (req, res) {
 		res.send('Cant Delete a Non existing Hero!');
 	}
 });
-
+/**/
 heroesRouter.delete('/', function (req, res) {
 	var len = heroOp.getHeroes().length;
 	heroOp.deleteHeroByName(req.query.name);
