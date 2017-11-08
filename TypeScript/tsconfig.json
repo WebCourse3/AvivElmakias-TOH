@@ -7,10 +7,8 @@
     "sourceMap": true
   },
   "files": [
-    "./ConsoleLogger.ts",
     "./logger.ts",
-    "./config.ts",
-    "./FileLogger.ts"
+    "./config.ts"
   ],
   "exclude": ["node_modules"]
 }
