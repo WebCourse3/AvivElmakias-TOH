@@ -1,0 +1,6 @@
+{
+  "console" : true ,
+  "file" : true,
+  "colors" : false,
+  "logLevel": "warning"
+}

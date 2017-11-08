@@ -6,9 +6,9 @@ const port = 3000;
 
 var router = require('./router/router');//uses router.js export;
 app.use('/', router.router);
-
-let config = new configuration(true, true, true, 'error');
-let logOp = new logger('Aviv', config);
+let configFile = 'C:/Users/Jbt/WebstormProjects/AvivElmakias-TOH/TypeScript/configuration.json';
+let config = new configuration(true, false, false, 'info');
+let logOp = new logger('Aviv',undefined ,configFile);
 let strings = ['Hey', 'look', 'at', 'me', 'im', 'working'];
 logOp.log(null, strings);
 

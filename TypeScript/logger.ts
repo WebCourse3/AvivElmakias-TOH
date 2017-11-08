@@ -1,3 +1,4 @@
+
 import { configuration } from './config';
 import * as fs from 'fs';
 
@@ -5,7 +6,7 @@ export class Logger {
 
 	public name: string;
 	public configuration: configuration;
-
+	public filePath:string;
 	public logOptions: any = {
 		'info': this.info,
 		'warning': this.warning,
@@ -14,10 +15,17 @@ export class Logger {
 
 	};
 
-	constructor(name: string, configuration: configuration) {
+	constructor(name: string, configuration?: configuration, filePath?:string ) {
 		this.name = name;
-		this.configuration = configuration;
+		if(typeof configuration !== 'undefined') {
+			this.configuration = configuration;
+		}
+		else if(typeof filePath!=='undefined'){
+			this.configuration=this.getFromJson(filePath);
+		}
 	}
+
+
 
 	log(level: string, ...strings: Array<string>): void {
 		let printOpt = level || this.configuration.logLevel;
@@ -88,5 +96,13 @@ export class Logger {
 	logFile(level: string, strings: Array<string>): void {
 		fs.appendFileSync(__dirname + '/test.log', level + ' \n');
 		strings.forEach(string => (fs.appendFileSync(__dirname + '/test.log', string + ' ')));
+	}
+
+	getFromJson(pathFile:string) : any {
+		if(fs.existsSync(pathFile)){
+			let config:string = fs.readFileSync(pathFile,'utf-8');
+			return JSON.parse(config);
+		}
+
 	}
 }
